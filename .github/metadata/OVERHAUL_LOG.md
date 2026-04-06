@@ -17,3 +17,11 @@
     - Body scroll-locking on mount to prevent layout shift.
     - Escape-key and overlay-click closure for standard-compliant UX.
 - **Premium Indicators**: Implemented glowing status badges for 'Live Now' vs 'Upcoming' features.
+
+## Phase 4: Multi-Step Profile Onboarding
+- **Onboarding Architecture**: Developed a 4-step state machine for user data ingestion:
+    - **Basics**: Identity & GitHub verification.
+    - **Role Selection**: High-end interactive role cards with shadow-glow active states.
+    - **Tech Stack**: Dynamic badge system for real-time skill mapping.
+    - **Work Style**: Comprehensive team-dynamic preferences.
+- **Flow Logic**: Integrated an `onComplete` callback mechanism to transition from data ingestion to match results without a page refresh.
