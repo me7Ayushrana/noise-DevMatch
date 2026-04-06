@@ -54,7 +54,7 @@ export default function MatchesPage() {
                                 <Button
                                     onClick={handleComplete}
                                     variant="outline"
-                                    className="glass border-primary/20 text-primary hover:bg-primary/10 gap-2"
+                                    className="glass border-primary/20 text-primary hover:bg-primary/10 gap-2 active:scale-95 hover:scale-105 transition-all"
                                 >
                                     <Sparkles className="w-4 h-4" />
                                     Fast Track Demo: View Matches
@@ -74,7 +74,7 @@ export default function MatchesPage() {
                                 <Button
                                     variant="ghost"
                                     onClick={() => setShowResults(false)}
-                                    className="mb-6 -ml-4 text-muted-foreground hover:text-white gap-2"
+                                    className="mb-6 -ml-4 text-muted-foreground hover:text-white gap-2 active:scale-95 transition-all"
                                 >
                                     <ArrowLeft className="w-4 h-4" />
                                     Edit Profile

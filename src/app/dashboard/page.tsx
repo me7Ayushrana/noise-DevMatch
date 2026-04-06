@@ -72,6 +72,12 @@ export default function DashboardPage() {
     const [activeTab, setActiveTab] = useState("explorer");
     const [newHackathon, setNewHackathon] = useState({ title: "", date: "", prize: "", category: "", image: "" });
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [joinedIds, setJoinedIds] = useState<string[]>([]);
+
+    const handleJoin = (id: string) => {
+        if (joinedIds.includes(id)) return;
+        setJoinedIds([...joinedIds, id]);
+    };
 
     const pendingCount = hackathons.filter(h => h.status === 'pending').length;
 
@@ -201,8 +207,16 @@ export default function DashboardPage() {
                                                 </div>
                                                 {hack.prize} Pool
                                             </div>
-                                            <Button variant="outline" className="w-full h-14 bg-white/5 hover:bg-white hover:text-black border-white/10 rounded-2xl gap-3 text-sm font-bold uppercase tracking-widest group/btn active:scale-95 transition-all">
-                                                Explore Arena <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-2 transition-transform" />
+                                            <Button
+                                                onClick={() => handleJoin(hack.id)}
+                                                variant={joinedIds.includes(hack.id) ? "secondary" : "outline"}
+                                                className={`w-full h-14 rounded-2xl gap-3 text-sm font-bold uppercase tracking-widest group/btn active:scale-95 transition-all ${joinedIds.includes(hack.id) ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/40" : "bg-white/5 border-white/10 hover:bg-white hover:text-black"}`}
+                                            >
+                                                {joinedIds.includes(hack.id) ? (
+                                                    <>Joined Arena <CheckCircle2 className="w-4 h-4" /></>
+                                                ) : (
+                                                    <>Explore Arena <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-2 transition-transform" /></>
+                                                )}
                                             </Button>
                                         </CardContent>
                                     </Card>
@@ -348,16 +362,16 @@ export default function DashboardPage() {
                                                 <Button
                                                     onClick={() => handleReject(node.id)}
                                                     variant="ghost"
-                                                    className="h-16 px-8 rounded-2xl hover:bg-destructive/10 hover:text-destructive gap-2 flex-1 md:flex-none border border-white/5 hover:border-destructive/20 font-black uppercase text-xs tracking-widest transition-all"
+                                                    className="h-16 px-8 rounded-2xl hover:bg-destructive/10 hover:text-destructive gap-2 flex-1 md:flex-none border border-white/5 hover:border-destructive/20 font-black uppercase text-xs tracking-widest transition-all active:scale-95"
                                                 >
                                                     <XCircle className="w-5 h-5" /> REJECT
                                                 </Button>
-                                                <button
+                                                <Button
                                                     onClick={() => handleApprove(node.id)}
                                                     className="h-16 px-10 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-black flex items-center justify-center gap-3 flex-1 md:flex-none shadow-[0_0_30px_rgba(16,185,129,0.3)] active:scale-95 transition-all uppercase text-xs tracking-widest"
                                                 >
                                                     <CheckCircle2 className="w-5 h-5" /> APPROVE REQUEST
-                                                </button>
+                                                </Button>
                                             </div>
                                         </motion.div>
                                     ))}

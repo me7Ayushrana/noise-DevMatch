@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { SmoothScrollProvider } from "@/components/providers/smooth-scroll-provider";
 import { Navbar } from "@/components/layout/navbar";
+import { HackathonTimer } from "@/components/layout/hackathon-timer";
 
 const geistSans = Geist({
   variable: "--font-sans",
@@ -39,6 +40,7 @@ export default function RootLayout({
             <main className="min-h-screen bg-grid">
               {children}
             </main>
+            <HackathonTimer />
           </SmoothScrollProvider>
         </ThemeProvider>
       </body>

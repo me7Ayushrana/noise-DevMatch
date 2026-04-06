@@ -1,15 +1,55 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 import Hero3D from "@/components/ui/3d/hero-3d";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Zap, Shield, Users, Code } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { ArrowRight, Zap, Shield, Users, Code, Sparkles, Terminal } from "lucide-react";
 
 export default function Home() {
+  const [demoUrl, setDemoUrl] = useState("");
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisStep, setAnalysisStep] = useState(0);
+  const router = useRouter();
+
+  const loadingSteps = [
+    "Decrypting codebase DNA...",
+    "Mapping architectural flow...",
+    "Synthesizing optimal squad...",
+  ];
+
+  const handleDemo = async () => {
+    setIsAnalyzing(true);
+    for (let i = 0; i < loadingSteps.length; i++) {
+      setAnalysisStep(i);
+      await new Promise(resolve => setTimeout(resolve, 800));
+    }
+
+    if (demoUrl) {
+      router.push(`/analyzer?url=${encodeURIComponent(demoUrl)}&demo=true`);
+    } else {
+      router.push(`/analyzer?demo=true`);
+    }
+  };
+
+  const getBlueprint = (url: string) => {
+    if (!url) return null;
+    return {
+      stack: ["React", "Next.js", "TypeScript"],
+      type: "Fullstack SaaS",
+      roles: ["Frontend Lead", "Backend / DevOps", "Product Designer"]
+    };
+  };
+
+  const blueprint = getBlueprint(demoUrl);
+
   return (
     <div className="relative w-full">
       {/* Hero Section */}
-      <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
+      <section className="relative h-screen min-h-[900px] w-full flex items-center justify-center overflow-hidden">
         <Hero3D />
 
         <div className="container relative z-10 mx-auto px-6 text-center">
@@ -29,14 +69,123 @@ export default function Home() {
               DevMatch uses AI to analyze your skills and GitHub history to find the perfect squad for your next big win.
             </p>
 
+            {/* Instant Demo Input */}
+            <div className="relative max-w-xl mx-auto mb-10">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.5 }}
+                className="p-2 glass-premium rounded-[2rem] border-white/10 flex items-center gap-2 group focus-within:border-primary focus-within:shadow-[0_0_50px_rgba(99,102,241,0.2)] transition-all duration-500 shadow-2xl relative z-20"
+              >
+                <div className="flex-1 flex items-center px-6 gap-3">
+                  <Terminal className={`w-5 h-5 text-primary/40 group-focus-within:text-primary transition-colors ${demoUrl ? 'animate-pulse' : ''}`} />
+                  <Input
+                    value={demoUrl}
+                    onChange={(e) => setDemoUrl(e.target.value)}
+                    placeholder="Paste GitHub Repo URL..."
+                    className="bg-transparent border-none text-white focus-visible:ring-0 placeholder:text-white/20 h-14 text-sm font-medium"
+                    onKeyDown={(e) => e.key === 'Enter' && handleDemo()}
+                  />
+                </div>
+                <Button
+                  onClick={handleDemo}
+                  disabled={isAnalyzing}
+                  className="rounded-2xl h-14 px-8 bg-primary hover:bg-white hover:text-black gap-2 transition-all active:scale-90 hover:scale-105 shadow-glow font-black uppercase text-xs tracking-widest shrink-0"
+                >
+                  {isAnalyzing ? (
+                    <Zap className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <>Try Demo <Sparkles className="w-4 h-4 animate-pulse" /></>
+                  )}
+                </Button>
+              </motion.div>
+
+              {/* Live Intelligence Preview */}
+              <AnimatePresence>
+                {demoUrl && !isAnalyzing && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    className="absolute top-full left-0 right-0 mt-4 p-6 glass-card rounded-3xl border border-primary/20 shadow-2xl z-10 text-left overflow-hidden"
+                  >
+                    <div className="absolute top-0 right-0 p-4 opacity-5">
+                      <Code className="w-24 h-24 text-primary" />
+                    </div>
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                      <span className="text-[10px] uppercase font-black tracking-[0.2em] text-primary">Live Context Analysis</span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-4">
+                      <div>
+                        <div className="text-[9px] uppercase font-bold text-white/30 mb-1">Tech Stack</div>
+                        <div className="flex flex-wrap gap-1">
+                          {blueprint?.stack.map(s => (
+                            <span key={s} className="text-[10px] font-bold text-white/70">{s}</span>
+                          ))}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-[9px] uppercase font-bold text-white/30 mb-1">Project Type</div>
+                        <div className="text-[10px] font-bold text-primary">{blueprint?.type}</div>
+                      </div>
+                      <div>
+                        <div className="text-[9px] uppercase font-bold text-white/30 mb-1">Suggested Squad</div>
+                        <div className="text-[10px] font-bold text-white/70">{blueprint?.roles.length} Roles Identified</div>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Smart Loading Overlay */}
+            <AnimatePresence>
+              {isAnalyzing && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-xl"
+                >
+                  <div className="text-center space-y-8">
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                      className="w-20 h-20 border-t-2 border-primary rounded-full mx-auto shadow-glow"
+                    />
+                    <div className="space-y-4">
+                      <motion.h4
+                        key={analysisStep}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="text-2xl font-black tracking-tighter text-glow"
+                      >
+                        {loadingSteps[analysisStep]}
+                      </motion.h4>
+                      <div className="flex items-center justify-center gap-2">
+                        {loadingSteps.map((_, i) => (
+                          <div key={i} className={`w-2 h-2 rounded-full transition-all duration-500 ${i <= analysisStep ? 'bg-primary shadow-glow scale-125' : 'bg-white/10'}`} />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             <div className="flex flex-col sm:row items-center justify-center gap-4">
-              <Button size="lg" className="h-14 px-8 text-lg rounded-2xl bg-primary hover:bg-primary/90 shadow-[0_0_30px_rgba(99,102,241,0.4)] transition-all hover:scale-105 active:scale-95 group">
-                Find Your Match
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-              <Button size="lg" variant="outline" className="h-14 px-8 text-lg rounded-2xl glass hover:bg-white/5 transition-all">
-                Analyze Repository
-              </Button>
+              <Link href="/matches">
+                <Button size="lg" className="h-14 px-8 text-lg rounded-2xl bg-primary hover:bg-primary/90 shadow-[0_0_30px_rgba(99,102,241,0.4)] transition-all hover:scale-105 active:scale-95 group">
+                  Find Your Match
+                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
+              <Link href="/analyzer">
+                <Button size="lg" variant="outline" className="h-14 px-8 text-lg rounded-2xl glass hover:bg-white/5 transition-all hover:scale-105 active:scale-95">
+                  Analyze Repository
+                </Button>
+              </Link>
             </div>
           </motion.div>
         </div>

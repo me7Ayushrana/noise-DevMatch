@@ -10,6 +10,7 @@ function AnimatedSphere() {
     const [hovered, setHover] = useState(false);
 
     useFrame((state) => {
+        if (!meshRef.current) return;
         const time = state.clock.getElapsedTime();
         meshRef.current.rotation.x = time * 0.2;
         meshRef.current.rotation.y = time * 0.3;
@@ -44,14 +45,15 @@ function AnimatedSphere() {
 }
 
 function Particles() {
-    const points = useRef<THREE.Points>(null!);
+    const groupRef = useRef<THREE.Group>(null!);
 
     useFrame((state) => {
-        points.current.rotation.y = state.clock.getElapsedTime() * 0.05;
+        if (!groupRef.current) return;
+        groupRef.current.rotation.y = state.clock.getElapsedTime() * 0.05;
     });
 
     return (
-        <group rotation={[0, 0, Math.PI / 4]}>
+        <group ref={groupRef} rotation={[0, 0, Math.PI / 4]}>
             <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
         </group>
     );

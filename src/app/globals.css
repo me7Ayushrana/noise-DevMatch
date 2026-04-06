@@ -146,3 +146,21 @@
     transform: translateX(100%);
   }
 }
+
+@layer utilities {
+  .shimmer-border {
+    @apply relative overflow-hidden;
+  }
+
+  .shadow-glow {
+    box-shadow: 0 0 20px var(--primary);
+  }
+
+  .shadow-glow-emerald {
+    box-shadow: 0 0 20px oklch(0.65 0.25 150);
+  }
+
+  .text-glow {
+    text-shadow: 0 0 15px var(--primary);
+  }
+}

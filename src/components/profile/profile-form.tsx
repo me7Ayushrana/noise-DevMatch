@@ -74,10 +74,15 @@ export function ProfileForm() {
                                     { id: "fullstack", label: "Fullstack", icon: Code2 },
                                     { id: "designer", label: "Designer", icon: Palette }
                                 ].map((role) => (
-                                    <button key={role.id} className="flex flex-col items-center gap-4 p-6 rounded-2xl glass border-white/10 hover:border-primary/50 hover:bg-primary/5 transition-all">
+                                    <Button
+                                        key={role.id}
+                                        variant="ghost"
+                                        className="flex flex-col items-center gap-4 p-8 h-auto rounded-3xl glass border-white/10 hover:border-primary/50 hover:bg-primary/5 transition-all active:scale-95"
+                                        onClick={() => { }}
+                                    >
                                         <role.icon className="w-8 h-8 text-primary" />
                                         <span className="font-bold">{role.label}</span>
-                                    </button>
+                                    </Button>
                                 ))}
                             </div>
                         )}
@@ -98,7 +103,12 @@ export function ProfileForm() {
                                     {skills.map((s) => (
                                         <Badge key={s} variant="secondary" className="px-3 py-1 bg-primary/10 border-primary/20 text-primary">
                                             {s}
-                                            <button onClick={() => setSkills(skills.filter(sk => sk !== s))} className="ml-2 hover:text-white">×</button>
+                                            <button
+                                                onClick={() => setSkills(skills.filter(sk => sk !== s))}
+                                                className="ml-2 hover:text-white transition-colors active:scale-75"
+                                            >
+                                                ×
+                                            </button>
                                         </Badge>
                                     ))}
                                 </div>
@@ -112,12 +122,13 @@ export function ProfileForm() {
                         variant="ghost"
                         disabled={step === 0}
                         onClick={() => setStep(step - 1)}
+                        className="active:scale-95 transition-all"
                     >
                         Back
                     </Button>
                     <Button
                         onClick={() => step < STEPS.length - 1 ? setStep(step + 1) : null}
-                        className="bg-primary hover:bg-primary/90 px-8"
+                        className="bg-primary hover:bg-primary/90 px-8 active:scale-95 transition-all"
                     >
                         {step === STEPS.length - 1 ? "Complete Profile" : "Continue"}
                     </Button>
