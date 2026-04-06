@@ -273,3 +273,4 @@ export default function Home() {
     </div>
   );
 }
+/* Hero: Shimmer timing recalibration - SC */
