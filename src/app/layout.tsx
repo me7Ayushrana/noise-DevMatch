@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import { SmoothScrollProvider } from "@/components/providers/smooth-scroll-provider";
 import { Navbar } from "@/components/layout/navbar";
 import { HackathonTimer } from "@/components/layout/hackathon-timer";
+import { NexusChat } from "@/components/ai/nexus-chat";
 
 const geistSans = Geist({
   variable: "--font-sans",
@@ -41,6 +42,7 @@ export default function RootLayout({
               {children}
             </main>
             <HackathonTimer />
+            <NexusChat />
           </SmoothScrollProvider>
         </ThemeProvider>
       </body>

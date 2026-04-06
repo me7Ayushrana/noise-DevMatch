@@ -11,6 +11,7 @@ import { Sparkles, ArrowLeft } from "lucide-react";
 export default function MatchesPage() {
     const [profile, setProfile] = useState<UserProfile | null>(null);
     const [showResults, setShowResults] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
 
     // Simulation: When profile is "complete"
     const handleComplete = () => {
@@ -25,12 +26,21 @@ export default function MatchesPage() {
         setShowResults(true);
     };
 
-    const matches = profile
+    const allMatches = profile
         ? MOCK_USERS.map(u => calculateMatch(profile, u)).sort((a, b) => b.score - a.score)
         : [];
 
+    const filteredMatches = allMatches.filter(match => {
+        const q = searchQuery.toLowerCase();
+        return (
+            match.user.name.toLowerCase().includes(q) ||
+            match.user.role.toLowerCase().includes(q) ||
+            match.user.skills.some((s: string) => s.toLowerCase().includes(q))
+        );
+    });
+
     return (
-        <div className="pt-32 pb-20 container mx-auto px-6">
+        <div className="pt-32 pb-64 container mx-auto px-6">
             <AnimatePresence mode="wait">
                 {!showResults ? (
                     <motion.div
@@ -47,19 +57,9 @@ export default function MatchesPage() {
                                 We'll use your GitHub and skills to find the perfect technical match.
                             </p>
                         </div>
-                        {/* For demo purposes, we added a wrapper to handle the "Complete" state */}
+                        {/* Integrated Profile Flow */}
                         <div className="relative">
-                            <ProfileForm />
-                            <div className="mt-8 flex justify-center">
-                                <Button
-                                    onClick={handleComplete}
-                                    variant="outline"
-                                    className="glass border-primary/20 text-primary hover:bg-primary/10 gap-2 active:scale-95 hover:scale-105 transition-all"
-                                >
-                                    <Sparkles className="w-4 h-4" />
-                                    Fast Track Demo: View Matches
-                                </Button>
-                            </div>
+                            <ProfileForm onComplete={handleComplete} />
                         </div>
                     </motion.div>
                 ) : (
@@ -97,11 +97,51 @@ export default function MatchesPage() {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {matches.map((match, i) => (
-                                <MatchCard key={i} match={match} />
-                            ))}
+                        {/* Premium Search Bar */}
+                        <div className="relative max-w-xl mb-12 group/search">
+                            <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none">
+                                <Sparkles className="w-4 h-4 text-primary/40 group-focus-within/search:text-primary transition-colors" />
+                            </div>
+                            <input
+                                type="text"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                placeholder="Search by name, role, or tech stack..."
+                                className="w-full h-14 pl-14 pr-6 rounded-2xl glass-premium border-white/5 focus:border-primary/30 transition-all outline-none text-sm font-medium tracking-tight placeholder:text-white/20 selection:bg-primary/30"
+                            />
+                            <div className="absolute inset-y-0 right-6 flex items-center pointer-events-none">
+                                <div className="px-2 py-1 rounded-md bg-white/5 border border-white/10 text-[9px] uppercase font-black tracking-widest text-white/30">
+                                    {filteredMatches.length} Matches Found
+                                </div>
+                            </div>
                         </div>
+
+                        {filteredMatches.length > 0 ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                {filteredMatches.map((match, i) => (
+                                    <MatchCard key={i} match={match} />
+                                ))}
+                            </div>
+                        ) : (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="py-20 text-center glass-card rounded-[2.5rem] border-white/5"
+                            >
+                                <div className="w-20 h-20 bg-primary/10 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-primary/20">
+                                    <Sparkles className="w-10 h-10 text-primary animate-pulse" />
+                                </div>
+                                <h3 className="text-2xl font-bold mb-2">No Matches Found</h3>
+                                <p className="text-muted-foreground">Try searching for a different skill or role.</p>
+                                <Button
+                                    variant="ghost"
+                                    onClick={() => setSearchQuery("")}
+                                    className="mt-6 text-primary hover:text-white active:scale-95 transition-all"
+                                >
+                                    Clear Search
+                                </Button>
+                            </motion.div>
+                        )}
                     </motion.div>
                 )}
             </AnimatePresence>

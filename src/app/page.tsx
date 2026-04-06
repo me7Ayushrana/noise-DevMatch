@@ -4,19 +4,20 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Canvas } from "@react-three/fiber";
 import Hero3D from "@/components/ui/3d/hero-3d";
-import Galaxy from "@/components/ui/3d/galaxy";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowRight, Zap, Shield, Users, Code, Sparkles, Terminal, Globe } from "lucide-react";
+import { ArrowRight, Zap, Shield, Users, Code, Sparkles, Terminal, Rocket } from "lucide-react";
+import { FeatureRoadmap } from "@/components/ui/feature-roadmap";
+
 
 export default function Home() {
   const [demoUrl, setDemoUrl] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisStep, setAnalysisStep] = useState(0);
-  const [isDiving, setIsDiving] = useState(false);
+  const [showRoadmap, setShowRoadmap] = useState(false);
   const router = useRouter();
+
 
   const loadingSteps = [
     "Decrypting codebase DNA...",
@@ -65,43 +66,58 @@ export default function Home() {
               The Ultimate Hackathon Companion
             </span>
             <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-8 leading-[0.9]">
-              Match <span className="text-glow text-primary">Teammates</span>.<br />
-              Build <span className="text-white/40">Magic</span>.
+              <span className="gold-shimmer">Match</span> <span className="text-glass-shimmer">Teammates</span>.<br />
+              <span className="gold-shimmer">Build</span> <span className="text-white/40">Magic</span>.
             </h1>
             <p className="max-w-2xl mx-auto text-lg md:text-xl text-muted-foreground mb-10 leading-relaxed font-medium">
               DevMatch uses AI to analyze your skills and GitHub history to find the perfect squad for your next big win.
             </p>
 
             {/* Instant Demo Input */}
-            <div className="relative max-w-xl mx-auto mb-10">
+            <div className="relative max-w-2xl mx-auto mb-10 group/input">
               <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.5 }}
-                className="p-2 glass-premium rounded-[2rem] border-white/10 flex items-center gap-2 group focus-within:border-primary focus-within:shadow-[0_0_50px_rgba(99,102,241,0.2)] transition-all duration-500 shadow-2xl relative z-20"
+                initial={{ opacity: 0, scale: 0.98, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.8, ease: "circOut" }}
+                className="p-1.5 glass-premium rounded-[2.5rem] gold-shimmer-border flex items-center gap-2 focus-within:shadow-[0_0_80px_rgba(99,102,241,0.15)] transition-all duration-700 shadow-2xl relative z-20"
               >
-                <div className="flex-1 flex items-center px-6 gap-3">
-                  <Terminal className={`w-5 h-5 text-primary/40 group-focus-within:text-primary transition-colors ${demoUrl ? 'animate-pulse' : ''}`} />
+                <div className="flex-1 flex items-center px-8 gap-4">
+                  <div className="relative flex items-center justify-center">
+                    <Terminal className={`w-5 h-5 text-primary/30 group-focus-within/input:text-primary transition-all duration-500 ${demoUrl ? 'scale-110' : ''}`} />
+                    {demoUrl && (
+                      <motion.div
+                        layoutId="glow"
+                        className="absolute inset-0 bg-primary/20 blur-xl rounded-full"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                      />
+                    )}
+                  </div>
                   <Input
                     value={demoUrl}
                     onChange={(e) => setDemoUrl(e.target.value)}
-                    placeholder="Paste GitHub Repo URL..."
-                    className="bg-transparent border-none text-white focus-visible:ring-0 placeholder:text-white/20 h-14 text-sm font-medium"
+                    placeholder="Paste GitHub Repository URL..."
+                    className="bg-transparent border-none text-white focus-visible:ring-0 placeholder:text-white/10 h-16 text-base font-light tracking-tight selection:bg-primary/30"
                     onKeyDown={(e) => e.key === 'Enter' && handleDemo()}
                   />
                 </div>
                 <Button
                   onClick={handleDemo}
                   disabled={isAnalyzing}
-                  className="rounded-2xl h-14 px-8 bg-primary hover:bg-white hover:text-black gap-2 transition-all active:scale-90 hover:scale-105 shadow-glow font-black uppercase text-xs tracking-widest shrink-0"
+                  className="rounded-[1.8rem] h-16 px-10 bg-primary hover:bg-white hover:text-black gap-3 transition-all active:scale-95 hover:scale-[1.02] shadow-glow font-black uppercase text-[10px] tracking-[0.2em] shrink-0 shimmer-border overflow-hidden group/btn"
                 >
                   {isAnalyzing ? (
-                    <Zap className="w-4 h-4 animate-spin" />
+                    <Zap className="w-4 h-4 animate-spin text-white group-hover/btn:text-black" />
                   ) : (
-                    <>Try Demo <Sparkles className="w-4 h-4 animate-pulse" /></>
+                    <>
+                      Try Demo
+                      <Sparkles className="w-3.5 h-3.5 animate-pulse text-white/70 group-hover/btn:text-black" />
+                    </>
                   )}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover/btn:animate-shimmer" />
                 </Button>
               </motion.div>
+
 
               {/* Live Intelligence Preview */}
               <AnimatePresence>
@@ -190,8 +206,30 @@ export default function Home() {
                 </Button>
               </Link>
             </div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.2 }}
+              className="mt-12"
+            >
+              <Button
+                variant="ghost"
+                onClick={() => setShowRoadmap(true)}
+                className="h-10 px-6 rounded-full glass-premium border-white/5 hover:border-primary/30 transition-all group flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-white/40 hover:text-primary active:scale-95 shadow-2xl"
+              >
+                <Rocket className="w-3.5 h-3.5 text-primary group-hover:animate-bounce" />
+                Features & Roadmap
+              </Button>
+            </motion.div>
+
+            <FeatureRoadmap
+              isOpen={showRoadmap}
+              onClose={() => setShowRoadmap(false)}
+            />
           </motion.div>
         </div>
+
 
         {/* Scroll Indicator */}
         <motion.div
@@ -229,58 +267,6 @@ export default function Home() {
                 {feature.desc}
               </p>
             </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* Galaxy Ecosystem Section */}
-      <section className="relative min-h-[80vh] flex flex-col items-center justify-center overflow-hidden bg-black py-20">
-        <div className="absolute inset-0 z-0">
-          <Canvas camera={{ position: [0, 0, 15], fov: 60 }}>
-            <Galaxy isDiving={isDiving} onDive={() => setIsDiving(true)} />
-            <ambientLight intensity={0.5} />
-          </Canvas>
-        </div>
-
-        <div className="relative z-10 text-center space-y-8 select-none pointer-events-none">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="space-y-4"
-          >
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <div className="px-4 py-1 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-md">
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Live Ecosystem</span>
-              </div>
-            </div>
-            <h2 className="text-5xl md:text-7xl font-black tracking-tight leading-none bg-gradient-to-b from-white via-white to-white/40 bg-clip-text text-transparent">
-              EXPLORE THE<br />
-              <span className="text-glow">GALAXY</span>
-            </h2>
-          </motion.div>
-
-          <div className="pt-10 pointer-events-auto">
-            <Button
-              onClick={() => setIsDiving(!isDiving)}
-              className={`h-16 px-10 rounded-full text-xs font-black uppercase tracking-[0.3em] transition-all duration-700 ${isDiving ? 'bg-primary shadow-glow scale-110' : 'glass-premium hover:bg-white/10'}`}
-            >
-              {isDiving ? 'WARP DRIVE ACTIVE' : 'PLAY WITH GALAXY'}
-            </Button>
-          </div>
-        </div>
-
-        {/* Floating Stats */}
-        <div className="absolute bottom-10 left-0 right-0 z-10 px-10 flex flex-wrap justify-center gap-12 opacity-50 pointer-events-none">
-          {[
-            { label: "NODES", val: "1.2k+" },
-            { label: "TRANSFERS", val: "450/min" },
-            { label: "LATENCY", val: "14ms" }
-          ].map((stat, i) => (
-            <div key={i} className="flex flex-col items-center gap-1">
-              <span className="text-2xl font-black tracking-tighter text-white">{stat.val}</span>
-              <span className="text-[8px] uppercase tracking-[0.2em] text-muted-foreground">{stat.label}</span>
-            </div>
           ))}
         </div>
       </section>

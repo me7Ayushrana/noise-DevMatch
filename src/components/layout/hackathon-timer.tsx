@@ -31,7 +31,7 @@ export function HackathonTimer() {
             <motion.div
                 initial={{ y: 100, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className={`glass-premium px-8 py-4 rounded-[2rem] border-white/5 flex items-center gap-6 shadow-[0_20px_50px_rgba(0,0,0,0.5)] group backdrop-blur-2xl ${isUrgent ? 'border-orange-500/40 shadow-orange-500/20' : 'hover:border-primary/40 transition-all duration-500'}`}
+                className={`glass-premium relative px-8 py-4 rounded-[2rem] border-white/5 flex items-center gap-6 shadow-[0_20px_50px_rgba(0,0,0,0.5)] group backdrop-blur-2xl ${isUrgent ? 'border-orange-500/40 shadow-orange-500/20' : 'hover:border-primary/40 transition-all duration-500'}`}
             >
                 <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border transition-all ${isUrgent ? 'bg-orange-500/20 border-orange-500/40 animate-pulse text-orange-400' : 'bg-primary/20 border-primary/40 text-primary group-hover:bg-primary group-hover:text-white'}`}>
                     {isUrgent ? <AlertCircle className="w-6 h-6" /> : <Timer className="w-6 h-6" />}
